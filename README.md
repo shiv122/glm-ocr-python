@@ -69,3 +69,4 @@ The detector POSTs `{image_url, prompt}` to `/ocr` (see `glm_ocr_client.py`).
 | `OLLAMA_TIMEOUT_SECONDS` | `180` | per-inference ceiling |
 | `DOWNLOAD_TIMEOUT_SECONDS` | `30` | image fetch timeout |
 | `MAX_IMAGE_BYTES` | `26214400` | 25 MB fetch cap |
+# glm-ocr-python
