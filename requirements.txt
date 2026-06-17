@@ -1,10 +1,12 @@
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-httpx==0.28.1
-pydantic==2.10.4
+# The vLLM base image already ships torch + a recent fastapi / uvicorn / httpx /
+# pydantic. DO NOT pin those: glmocr requires pydantic>=2.12 (which the base
+# already has), so a hard pin like pydantic==2.10.4 makes the resolver fail.
+# Leave them unpinned so pip keeps the base versions and only adds the pipeline.
+#
 # Layout-aware OCR pipeline: PP-DocLayoutV3 (torch/transformers, not paddle) +
 # GLM-OCR recognition. The [selfhosted] extra pulls torch/torchvision/
-# transformers/opencv/pypdfium2. NOTE: glmocr wants transformers>=5.3 and
-# torch>=2.10 — if these clash with the torch baked into the vLLM base image,
-# pin to versions compatible with that image (see Dockerfile).
+# transformers/opencv/pypdfium2.
 glmocr[selfhosted]
+fastapi
+uvicorn[standard]
+httpx

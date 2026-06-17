@@ -19,10 +19,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /app
 
-# The vLLM base image ships an ENTRYPOINT that launches the API server; clear it
-# so our entrypoint.sh can run both vLLM and FastAPI.
-ENTRYPOINT []
-
 # Service deps + the glmocr layout pipeline. The base image already has vLLM +
 # torch; install on top.
 COPY requirements.txt ./
@@ -41,4 +37,7 @@ RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080
 
+# Replace the base image's vLLM server entrypoint with ours (it starts both vLLM
+# and the FastAPI box API). CMD [] clears any default args the base set.
 ENTRYPOINT ["/entrypoint.sh"]
+CMD []
