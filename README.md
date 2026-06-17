@@ -88,7 +88,7 @@ it uses the text-only `/ocr` path as before.
 | `VLLM_HOST` / `VLLM_PORT` | `127.0.0.1` / `8000` | internal vLLM server |
 | `GLM_OCR_MODEL` | `glm-ocr` | vLLM `--served-model-name` |
 | `VLLM_MODEL_PATH` | `zai-org/GLM-OCR` | HF repo (or local path) vLLM loads |
-| `VLLM_GPU_MEMORY_UTILIZATION` | `0.80` | leave headroom for the layout model |
+| `VLLM_GPU_MEMORY_UTILIZATION` | `0.45` | GLM-OCR is ~0.9B; low value leaves room for the layout model |
 | `GLMOCR_LAYOUT_DEVICE` | `cuda:0` | device for PP-DocLayoutV3 |
 | `DOWNLOAD_TIMEOUT_SECONDS` | `30` | image fetch timeout |
 | `MAX_IMAGE_BYTES` | `26214400` | 25 MB fetch cap |

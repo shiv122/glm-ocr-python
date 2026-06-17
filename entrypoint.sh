@@ -9,8 +9,10 @@ VLLM_PORT="${VLLM_PORT:-8000}"
 GLM_OCR_MODEL="${GLM_OCR_MODEL:-glm-ocr}"
 # HF repo vLLM loads. Override with VLLM_MODEL_PATH for a local/cached path.
 VLLM_MODEL_PATH="${VLLM_MODEL_PATH:-zai-org/GLM-OCR}"
-# Leave GPU headroom for the in-process layout model.
-GPU_MEM_UTIL="${VLLM_GPU_MEMORY_UTILIZATION:-0.80}"
+# GLM-OCR is only ~0.9B params, so vLLM needs little — keep this low so the
+# in-process PP-DocLayoutV3 layout model has room on the same GPU. ~0.45 of a
+# 12GB card (~5.4GB) is plenty for weights + KV cache.
+GPU_MEM_UTIL="${VLLM_GPU_MEMORY_UTILIZATION:-0.45}"
 
 echo "[entrypoint] starting vLLM (${VLLM_MODEL_PATH} as ${GLM_OCR_MODEL}) on ${VLLM_HOST}:${VLLM_PORT}..."
 python -m vllm.entrypoints.openai.api_server \
