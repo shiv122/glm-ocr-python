@@ -7,6 +7,12 @@
 # GLM-OCR recognition. The [selfhosted] extra pulls torch/torchvision/
 # transformers/opencv/pypdfium2.
 glmocr[selfhosted]
+# transformers >= 5.13 requires mistral-common >= 1.11.5 at import time
+# (is_mistral_common_available version-gates); the vLLM base ships an older
+# mistral-common, which makes vLLM's /v1/chat/completions 500 with
+# "NameError: SpecialTokens is not defined". Pin the pair we verified working.
+transformers==5.14.1
+mistral-common[image]>=1.11.5
 fastapi
 uvicorn[standard]
 httpx
