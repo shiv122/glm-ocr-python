@@ -20,6 +20,10 @@ VLLM_MODEL_PATH="${VLLM_MODEL_PATH:-zai-org/GLM-OCR}"
 # in-process PP-DocLayoutV3 layout model has room on the same GPU. ~0.45 of a
 # 12GB card (~5.4GB) is plenty for weights + KV cache.
 GPU_MEM_UTIL="${VLLM_GPU_MEMORY_UTILIZATION:-0.45}"
+# GLM-OCR's native max context is 131072 tokens, whose KV cache (8 GiB) can't
+# fit in 0.45 of a 12GB card — vLLM refuses to start. OCR requests are a few
+# thousand tokens, so cap the context; 32768 fits the remaining ~2 GiB.
+MAX_MODEL_LEN="${VLLM_MAX_MODEL_LEN:-32768}"
 
 # Speculative decoding (MTP) speeds GLM-OCR up but is an optimization and a
 # common first-boot failure point — leave it OFF by default; set
@@ -37,6 +41,7 @@ vllm serve "${VLLM_MODEL_PATH}" \
     --host "${VLLM_HOST}" \
     --port "${VLLM_PORT}" \
     --gpu-memory-utilization "${GPU_MEM_UTIL}" \
+    --max-model-len "${MAX_MODEL_LEN}" \
     "${SPEC_ARGS[@]}" &
 VLLM_PID=$!
 
