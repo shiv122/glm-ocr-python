@@ -25,11 +25,17 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Pre-download the PP-DocLayoutV3 layout weights so the first request doesn't pay
-# the download. The GLM-OCR model itself is pulled by vLLM at first boot — mount
-# a persistent HF cache volume at $HF_HOME to skip that cold-start download.
+# the download.
 RUN python -c "from huggingface_hub import snapshot_download; \
     snapshot_download('PaddlePaddle/PP-DocLayoutV3_safetensors')" \
     || echo "WARN: layout weight prefetch failed; will download at runtime"
+
+# Bake the GLM-OCR weights into the image too (~2 GB layer) so first boot never
+# touches the HF Hub — no anonymous rate limits, no dependence on host DNS.
+# vLLM finds them in $HF_HOME and skips the cold-start download. Deliberately no
+# fallback: if this download fails, the build should fail loudly.
+RUN python -c "from huggingface_hub import snapshot_download; \
+    snapshot_download('zai-org/GLM-OCR')"
 
 COPY app ./app
 COPY entrypoint.sh /entrypoint.sh
