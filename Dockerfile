@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Pre-download the PP-DocLayoutV3 layout weights so the first request doesn't pay
 # the download.
-RUN python -c "from huggingface_hub import snapshot_download; \
+RUN python3 -c "from huggingface_hub import snapshot_download; \
     snapshot_download('PaddlePaddle/PP-DocLayoutV3_safetensors')" \
     || echo "WARN: layout weight prefetch failed; will download at runtime"
 
@@ -34,7 +34,7 @@ RUN python -c "from huggingface_hub import snapshot_download; \
 # touches the HF Hub — no anonymous rate limits, no dependence on host DNS.
 # vLLM finds them in $HF_HOME and skips the cold-start download. Deliberately no
 # fallback: if this download fails, the build should fail loudly.
-RUN python -c "from huggingface_hub import snapshot_download; \
+RUN python3 -c "from huggingface_hub import snapshot_download; \
     snapshot_download('zai-org/GLM-OCR')"
 
 COPY app ./app
